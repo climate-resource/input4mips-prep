@@ -14,6 +14,7 @@ from input4mips_prep import (
     copy_dimensions,
     copy_variable,
     reverse_variable_dimensions,
+    rewrite_time_from_bounded_to_climatology,
 )
 from input4mips_validation.cvs import load_cvs
 from input4mips_validation.inference.from_data import (
@@ -56,6 +57,10 @@ def rewrite_clim_qbo_files(
         for variable in other_vars:
             copy_variable(ds, ds_fixed, variable)
 
+        rewrite_time_from_bounded_to_climatology(
+            ds_fixed, original_time_bounds=ds["time_bnds"]
+        )
+
         ds.close()
         ds_fixed.close()
         res.append(fixed_file)
@@ -96,15 +101,9 @@ def rewrite_clim_files(
         for variable in other_vars:
             copy_variable(ds, ds_fixed, variable)
 
-        ds_fixed.setncattr("frequency", "monC")
-        ds_fixed["time"].setncattr("climatology", "climatology_bounds")
-        ds_fixed["time"].delncattr("bounds")
-
-        ds_fixed.createDimension("nv", 2)
-        ds_fixed.createVariable(
-            "climatology_bounds", ds_fixed["time"].datatype, ("time", "nv")
+        rewrite_time_from_bounded_to_climatology(
+            ds_fixed, original_time_bounds=ds["time_bnds"]
         )
-        ds_fixed["climatology_bounds"][:] = ds["time_bnds"][:].T
 
         ds.close()
         ds_fixed.close()
@@ -221,11 +220,11 @@ def main() -> None:
 
     TMP_DIR.mkdir(exist_ok=True, parents=True)
 
-    # rewritten_clim_qbo_files = rewrite_clim_qbo_files(
-    #     clim_qbo_files,
-    #     out_dir=TMP_DIR,
-    #     correct_contact=cvs.source_id_entries[SOURCE_ID].values.contact,
-    # )
+    rewritten_clim_qbo_files = rewrite_clim_qbo_files(
+        clim_qbo_files,
+        out_dir=TMP_DIR,
+        correct_contact=cvs.source_id_entries[SOURCE_ID].values.contact,
+    )
 
     rewritten_clim_files = rewrite_clim_files(
         clim_files,
@@ -241,13 +240,13 @@ def main() -> None:
 
     OUT_DIR.mkdir(exist_ok=True, parents=True)
     for tmp_file in [
-        # *rewritten_clim_qbo_files,
+        *rewritten_clim_qbo_files,
         *rewritten_clim_files,
         *rewritten_historical_files,
     ]:
         renamed_file = rewrite_file_in_drs(tmp_file, TMP_DIR, cv_source=CV_SOURCE)
         out_file = OUT_DIR / Path(renamed_file).name
-        shutil.move(renamed_file, out_file)
+        shutil.copy(renamed_file, out_file)
 
         validation_res = get_validate_file_result(
             out_file,
