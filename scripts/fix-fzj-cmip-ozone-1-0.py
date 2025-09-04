@@ -72,15 +72,16 @@ def main() -> None:
         correct_contact=cvs.source_id_entries[SOURCE_ID].values.contact,
     )
 
-    validation_res = get_validate_file_result(
-        rewritten_file,
-        cv_source=CV_SOURCE,
-        # xr_variable_processor=xr_variable_processor,
-        # frequency_metadata_keys=frequency_metadata_keys,
-        # bounds_info=bounds_info,
-        allow_cf_checker_warnings=False,
-    )
-    validation_res.raise_if_errors()
+    for rewritten_file in [*rewritten_historical_files]:
+        validation_res = get_validate_file_result(
+            rewritten_file,
+            cv_source=CV_SOURCE,
+            # xr_variable_processor=xr_variable_processor,
+            # frequency_metadata_keys=frequency_metadata_keys,
+            # bounds_info=bounds_info,
+            allow_cf_checker_warnings=False,
+        )
+        validation_res.raise_if_errors()
 
 
 if __name__ == "__main__":
