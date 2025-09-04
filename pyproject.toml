@@ -4,6 +4,7 @@ authors = [
 ]
 requires-python = ">=3.9"
 dependencies = [
+    "input4mips-validation>=0.19.1",
     "pre-commit>=3.3.1",
 ]
 name = "input4mips-prep"
