@@ -6,13 +6,13 @@ requires-python = ">=3.9"
 dependencies = [
     "pre-commit>=3.3.1",
 ]
-name = "prototype"
+name = "input4mips-prep"
 version = "0.1.0"
 description = "Collection of scripts used to help preparing input4MIPs datasets"
 readme = "README.md"
 
 [tool.uv]
-package = false
+package = true
 
 [tool.ruff.lint]
 select = [
