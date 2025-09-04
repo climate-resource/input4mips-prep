@@ -4,7 +4,6 @@ authors = [
 ]
 requires-python = ">=3.9"
 dependencies = [
-    "input4mips-validation>=0.19.1",
     "pre-commit>=3.3.1",
 ]
 name = "input4mips-prep"
@@ -12,8 +11,29 @@ version = "0.1.0"
 description = "Collection of scripts used to help preparing input4MIPs datasets"
 readme = "README.md"
 
-[tool.uv]
-package = true
+[tool.pixi.pypi-dependencies.input4mips_prep]
+path = "."
+editable = true
+
+# [tool.uv]
+# package = true
+[tool.pixi.project]
+channels = [
+    "conda-forge",
+]
+platforms = [
+    "osx-64",
+    "osx-arm64",
+    "linux-64",
+    "linux-aarch64",
+    "win-64",
+]
+
+[tool.pixi.tasks]
+
+[tool.pixi.dependencies]
+input4mips-validation = ">=0.19.1,<0.20"
+cfunits = ">=3.3.7,<4"
 
 [tool.ruff.lint]
 select = [

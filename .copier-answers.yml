@@ -4,7 +4,7 @@ _src_path: gl:openscm/copier-basic-python-repository
 email: zebedee.nicholls@climate-resource.com
 name: Zebedee Nicholls
 notebooks: false
-package_manager: uv
+package_manager: pixi
 project_description_short: Collection of scripts used to help preparing input4MIPs
     datasets
 project_url: https://github.com/climate-resource/input4mips-prep
