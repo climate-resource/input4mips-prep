@@ -1,0 +1,39 @@
+[project]
+authors = [
+    { name = "Zebedee Nicholls", email = "zebedee.nicholls@climate-resource.com"},
+]
+requires-python = ">=3.9"
+dependencies = [
+    "pre-commit>=3.3.1",
+]
+name = "prototype"
+version = "0.1.0"
+description = "Collection of scripts used to help preparing input4MIPs datasets"
+readme = "README.md"
+
+[tool.uv]
+package = false
+
+[tool.ruff.lint]
+select = [
+    "E",
+    "W",
+    "F",
+    "I",
+    "D",
+    "PL",
+    "TRY",
+    "NPY",
+    "RUF",
+    "UP",
+    "S",
+]
+unfixable = [ ]
+ignore = [
+    "D200",
+    "D400",
+    "UP007",
+]
+
+[tool.ruff.lint.pydocstyle]
+convention = "numpy"
