@@ -57,10 +57,6 @@ def rewrite_clim_qbo_files(
         for variable in other_vars:
             copy_variable(ds, ds_fixed, variable)
 
-        rewrite_time_from_bounded_to_climatology(
-            ds_fixed, original_time_bounds=ds["time_bnds"]
-        )
-
         ds.close()
         ds_fixed.close()
         res.append(fixed_file)
@@ -81,7 +77,7 @@ def rewrite_clim_files(
     for f in clim_files:
         ds = netCDF4.Dataset(f, "r")
 
-        fixed_file = out_dir / f.name.replace("_clim", "")
+        fixed_file = out_dir / f.name
         ds_fixed = netCDF4.Dataset(fixed_file, "w")
 
         if verbose:
@@ -182,9 +178,6 @@ def rewrite_file_in_drs(
         time_end=time_end,
     )
 
-    if full_file_path.exists():
-        raise FileExistsError(full_file_path)
-
     full_file_path.parent.mkdir(exist_ok=True, parents=True)
     shutil.copy(file, full_file_path)
 
@@ -202,6 +195,7 @@ def main() -> None:
 
     IN_DIR = REPO_ROOT / "../input4MIPs_CVs/fzj-ozone"
     TMP_DIR = REPO_ROOT / "../input4MIPs_CVs/fzj-ozone-tmp"
+    OUT_FULL_TREE_DIR = REPO_ROOT / "../input4MIPs_CVs/fzj-ozone-rw-full-tree"
     OUT_DIR = REPO_ROOT / "../input4MIPs_CVs/fzj-ozone-rw"
 
     CV_SOURCE = "gh:main"
@@ -244,7 +238,9 @@ def main() -> None:
         *rewritten_clim_files,
         *rewritten_historical_files,
     ]:
-        renamed_file = rewrite_file_in_drs(tmp_file, TMP_DIR, cv_source=CV_SOURCE)
+        renamed_file = rewrite_file_in_drs(
+            tmp_file, output_root=OUT_FULL_TREE_DIR, cv_source=CV_SOURCE
+        )
         out_file = OUT_DIR / Path(renamed_file).name
         shutil.copy(renamed_file, out_file)
 
