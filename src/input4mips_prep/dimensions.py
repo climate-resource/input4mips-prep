@@ -35,5 +35,5 @@ def copy_dimensions(
     """
     for name, dimension in source.dimensions.items():
         target.createDimension(
-            name, (len(dimension) if not dimension.isunlimited else None)
+            name, (len(dimension) if not dimension.isunlimited() else None)
         )
