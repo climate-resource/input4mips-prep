@@ -47,7 +47,7 @@ def copy_variable(
         create_kwargs["fill_value"] = fill_value
         variable_attrs_to_copy.pop(variable_attrs_to_copy.index("_FillValue"))
 
-    target.createVariable(variable, variable_nc.datatype, dimensions)
+    target.createVariable(variable, variable_nc.datatype, dimensions, **create_kwargs)
     # Copy the data
     # unclear if this only works with 1D data
     target.variables[variable][:] = variable_nc[:]
@@ -123,7 +123,9 @@ def reverse_variable_dimensions(
         variable_attrs_to_copy.pop(variable_attrs_to_copy.index("_FillValue"))
 
     dimensions_new = dimensions[::-1]
-    target.createVariable(variable, variable_nc.datatype, dimensions_new)
+    target.createVariable(
+        variable, variable_nc.datatype, dimensions_new, **create_kwargs
+    )
     # Tranpose the data
     target.variables[variable][:] = variable_nc[:].T
 
